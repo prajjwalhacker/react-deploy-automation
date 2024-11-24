@@ -17,7 +17,6 @@ app.use(express.json());
 app.use(cors())
 
 
-
 app.post('/deploy', (req: any, res: any) => {
    const repoUrl = req.body.repoUrl;
    console.log(repoUrl);
@@ -42,7 +41,7 @@ app.post('/deploy', (req: any, res: any) => {
      console.log(`stderr: ${stderr}`);
     });
     res.json({ id });
-});
+   });
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
