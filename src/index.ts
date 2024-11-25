@@ -6,16 +6,32 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 const cors = require('cors');
+const { Storage } = require('@google-cloud/storage');
+const { getAllFilesPath }= require('./utils'); 
 
-dotenv.config();
+
+
 
 const app = express();
-const port = process.env.PORT;
+const port = 3000;
 
 app.use(express.json());
 
 app.use(cors())
 
+const storage = new Storage({keyFilename: 'GOOGLE_API_CRED.json'});
+
+const bucketName = 'vercel-static-bucket-test';
+
+async function uploadFile(filename: any, destination: any) {
+  await storage.bucket(bucketName).upload(filename, {
+    destination: destination,  // Destination file name in the bucket
+  });
+  console.log(`${filename} uploaded to ${bucketName}`);
+}
+
+
+uploadFile('dist\\my-react-project\\9mx2z\\.git\\config', 'index.js');
 
 app.post('/deploy', (req: any, res: any) => {
    const repoUrl = req.body.repoUrl;
@@ -39,7 +55,10 @@ app.post('/deploy', (req: any, res: any) => {
      }
      console.log(`stdout: ${stdout}`);
      console.log(`stderr: ${stderr}`);
-    });
+     const res  = getAllFilesPath(`./dist/my-react-project/${id}`);
+
+   });
+
     res.json({ id });
    });
 
